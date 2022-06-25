@@ -23,49 +23,6 @@ bool visited[V];
 int par[V];
 list<int> path;
 
-void init()
-{
-    for (int i = 0; i < ROWS; i++)
-    {
-        for (int j = 0; j < COLS; j++)
-            empty_grid[i][j] = i * COLS + j;
-    }
-
-    for (int i = 0; i < V; i++)
-    {
-        dist[i] = INF;
-        par[i] = i;
-        visited[i] = false;
-        for (int j = 0; j < V; j++)
-            cost[i][j] = INF;
-    }
-    dist[src] = 0;
-}
-
-bool is_valid_pos(int x, int y) { return x >= 0 && x < ROWS && y >= 0 && y < COLS; }
-
-void init_cost()
-{
-    for (int i = 0; i < ROWS; i++)
-    {
-        for (int j = 0; j < COLS; j++)
-        {
-
-            int row = empty_grid[i][j];
-            int col = row;
-            cost[row][col] = 0;
-
-            for (int k = 0; k < 4; k++)
-            {
-                int tmpx = i + adj_posX[k];
-                int tmpy = j + adj_posY[k];
-                if (is_valid_pos(tmpx, tmpy))
-                    cost[row][tmpx * COLS + tmpy] = 1;
-            }
-        }
-    }
-}
-
 void input()
 {
     cout << "Enter X position for point A (1 - " << ROWS << ") : ";
@@ -110,6 +67,49 @@ void input()
 
     src = srcx * COLS + srcy;
     dst = dstx * COLS + dsty;
+}
+
+void init()
+{
+    for (int i = 0; i < ROWS; i++)
+    {
+        for (int j = 0; j < COLS; j++)
+            empty_grid[i][j] = i * COLS + j;
+    }
+
+    for (int i = 0; i < V; i++)
+    {
+        dist[i] = INF;
+        par[i] = i;
+        visited[i] = false;
+        for (int j = 0; j < V; j++)
+            cost[i][j] = INF;
+    }
+    dist[src] = 0;
+}
+
+bool is_valid_pos(int x, int y) { return x >= 0 && x < ROWS && y >= 0 && y < COLS; }
+
+void init_cost()
+{
+    for (int i = 0; i < ROWS; i++)
+    {
+        for (int j = 0; j < COLS; j++)
+        {
+
+            int row = empty_grid[i][j];
+            int col = row;
+            cost[row][col] = 0;
+
+            for (int k = 0; k < 4; k++)
+            {
+                int tmpx = i + adj_posX[k];
+                int tmpy = j + adj_posY[k];
+                if (is_valid_pos(tmpx, tmpy))
+                    cost[row][tmpx * COLS + tmpy] = 1;
+            }
+        }
+    }
 }
 
 int getMin()
@@ -194,15 +194,14 @@ void display()
         }
         this_thread::sleep_for(chrono::milliseconds(100));
         system("clear");
-        cout << "\n";
     }
 }
 
 int main()
 {
+    input();
     init();
     init_cost();
-    input();
     dijkstra();
     recreate_path();
     display();

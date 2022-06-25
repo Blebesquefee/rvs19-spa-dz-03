@@ -24,54 +24,6 @@ bool visited[V];
 int par[V];
 list<int> path;
 
-void init()
-{
-    for (int i = 0; i < ROWS; i++)
-    {
-        for (int j = 0; j < COLS; j++)
-            empty_grid[i][j] = i * COLS + j;
-    }
-
-    for (int i = 0; i < V; i++)
-    {
-        dist[i] = INF;
-        par[i] = i;
-        visited[i] = false;
-    }
-    dist[src] = 0;
-
-    for (int i = wy1; i <= wy2; i++)
-        empty_grid[wx][i] = INF;
-}
-
-bool is_valid_pos(int x, int y) { return cost[x][y] != INF && x >= 0 && x < ROWS && y >= 0 && y < COLS; }
-
-void init_cost()
-{
-    for (int i = 0; i < ROWS; i++)
-    {
-        for (int j = 0; j < COLS; j++)
-        {
-            int row = empty_grid[i][j];
-            int col = row;
-
-            if (row != INF)
-            {
-                cost[row][col] = 0;
-                for (int k = 0; k < 4; k++)
-                {
-                    int tmpx = i + adj_posX[k];
-                    int tmpy = j + adj_posY[k];
-                    if (is_valid_pos(tmpx, tmpy))
-                        cost[row][tmpx * COLS + tmpy] = 1;
-                }
-            }
-            else
-                cost[i * COLS + j][i * COLS + j] = INF;
-        }
-    }
-}
-
 void input()
 {
     cout << "Enter X position for point A (1 - " << ROWS << ") : ";
@@ -123,6 +75,54 @@ void input()
     cout << "wx = " << wx << "\t\t"
          << "wy1 = " << wy1 << "\t\t"
          << "wy2 = " << wy2 << endl;
+}
+
+void init()
+{
+    for (int i = 0; i < ROWS; i++)
+    {
+        for (int j = 0; j < COLS; j++)
+            empty_grid[i][j] = i * COLS + j;
+    }
+
+    for (int i = 0; i < V; i++)
+    {
+        dist[i] = INF;
+        par[i] = i;
+        visited[i] = false;
+    }
+    dist[src] = 0;
+
+    for (int i = wy1; i <= wy2; i++)
+        empty_grid[wx][i] = INF;
+}
+
+bool is_valid_pos(int x, int y) { return cost[x][y] != INF && x >= 0 && x < ROWS && y >= 0 && y < COLS; }
+
+void init_cost()
+{
+    for (int i = 0; i < ROWS; i++)
+    {
+        for (int j = 0; j < COLS; j++)
+        {
+            int row = empty_grid[i][j];
+            int col = row;
+
+            if (row != INF)
+            {
+                cost[row][col] = 0;
+                for (int k = 0; k < 4; k++)
+                {
+                    int tmpx = i + adj_posX[k];
+                    int tmpy = j + adj_posY[k];
+                    if (is_valid_pos(tmpx, tmpy))
+                        cost[row][tmpx * COLS + tmpy] = 1;
+                }
+            }
+            else
+                cost[i * COLS + j][i * COLS + j] = INF;
+        }
+    }
 }
 
 int getMin()
@@ -210,7 +210,7 @@ void display()
         }
 
         this_thread::sleep_for(chrono::milliseconds(100));
-        cout << "\n";
+        system("clear");
     }
 }
 
